@@ -8,17 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.client) var client: MarsClient
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            LatestPhotosView()
         }
-        .padding()
     }
-}
-
-#Preview {
-    ContentView()
 }
