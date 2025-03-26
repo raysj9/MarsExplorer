@@ -19,6 +19,7 @@ struct LatestPhotosView: View {
     @Environment(\.client) var client: MarsClient
     
     @State private var state: FetchState = .loading
+    @State private var selectedPhoto: MarsPhoto?
     @State private var latestPhotos: [MarsPhoto] = []
     
     var body: some View {
@@ -36,6 +37,10 @@ struct LatestPhotosView: View {
         }
         .navigationTitle("Latest Photos")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $selectedPhoto, content: { photo in
+            PhotoDetailView(photo: photo)
+                .presentationBackground(.thinMaterial)
+        })
         .refreshable {
             Task { await fetchLatestPhotos() }
         }
@@ -48,6 +53,9 @@ struct LatestPhotosView: View {
         LazyVStack(spacing: 20) {
             ForEach(latestPhotos) { photo in
                 PhotoRowView(photo: photo)
+                    .onTapGesture {
+                        selectedPhoto = photo
+                    }
             }
         }
         .padding(.horizontal, 10)
