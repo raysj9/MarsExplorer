@@ -8,6 +8,7 @@
 import SwiftUI
 
 enum FetchState: Equatable {
+    case preFetch
     case loading
     case error(String)
     case empty
@@ -25,7 +26,7 @@ struct LatestPhotosView: View {
     var body: some View {
         ScrollView {
             switch state {
-            case .loading:
+            case .loading, .preFetch:
                 ProgressView()
             case .error(let error):
                 Text("Error: \(error)")

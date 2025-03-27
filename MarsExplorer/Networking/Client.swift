@@ -16,11 +16,18 @@ class MarsClient {
     @MainActor
     func fetchLatestMarsPhotos() async throws -> [MarsPhoto] {
         let path = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/latest_photos"
-        
-        let queryItems = [URLQueryItem(name: "api_key", value: "REPLACE")]
-        let response: MarsPhotosResponse = try await URLSession.shared.get(path: path, queryItems: queryItems)
-        
+        let queryItems = [URLQueryItem(name: "api_key", value: apiKey)]
+        let response: MarsLatestPhotosResponse = try await URLSession.shared.get(path: path, queryItems: queryItems)
         return response.latestPhotos
+    }
+    
+    
+    @MainActor
+    func fetchPhotosByDate(date: Date) async throws -> [MarsPhoto] {
+        let path = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos"
+        let queryItems = [URLQueryItem(name: "api_key", value: apiKey), URLQueryItem(name: "earth_date", value: date.toString())]
+        let response: MarsPhotosResponse = try await URLSession.shared.get(path: path, queryItems: queryItems)
+        return response.photos
     }
 }
 

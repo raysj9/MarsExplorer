@@ -26,6 +26,10 @@ struct MarsPhoto: Identifiable, Codable {
 }
 
 struct MarsPhotosResponse: Codable {
+    let photos: [MarsPhoto]
+}
+
+struct MarsLatestPhotosResponse: Codable {
     let latestPhotos: [MarsPhoto]
     
     enum CodingKeys: String, CodingKey {

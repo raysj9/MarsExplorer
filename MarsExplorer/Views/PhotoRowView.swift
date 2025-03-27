@@ -46,8 +46,8 @@ struct PhotoRowView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .foregroundStyle(Color.white.opacity(0.8))
-                .shadow(radius: 5)
+                .foregroundStyle(.white)
+                .shadow(radius: 2)
         )
     }
 }

@@ -11,9 +11,6 @@ struct ContentView: View {
     @Environment(\.client) var client: MarsClient
     
     var body: some View {
-        NavigationStack {
-//            LatestPhotosView()
-            PhotosByDateView()
-        }
+        MarsTabView()
     }
 }
