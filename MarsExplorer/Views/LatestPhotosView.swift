@@ -32,33 +32,17 @@ struct LatestPhotosView: View {
             case .empty:
                 Text("Empty")
             case .data:
-                photosView
+                PhotosListView(photos: latestPhotos)
             }
         }
         .navigationTitle("Latest Photos")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(item: $selectedPhoto, content: { photo in
-            PhotoDetailView(photo: photo)
-                .presentationBackground(.thinMaterial)
-        })
         .refreshable {
             Task { await fetchLatestPhotos() }
         }
         .task {
             Task { await fetchLatestPhotos() }
         }
-    }
-       
-    var photosView: some View {
-        LazyVStack(spacing: 20) {
-            ForEach(latestPhotos) { photo in
-                PhotoRowView(photo: photo)
-                    .onTapGesture {
-                        selectedPhoto = photo
-                    }
-            }
-        }
-        .padding(.horizontal, 10)
     }
     
     func fetchLatestPhotos() async {

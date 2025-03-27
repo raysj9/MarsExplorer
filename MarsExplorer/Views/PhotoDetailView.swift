@@ -40,6 +40,11 @@ struct PhotoDetailView: View {
             }
             .navigationTitle(photo.rover.name)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    ShareLink(item: URL(string: photo.imgSrc)!)
+                }
+            }
         }
     }
 }
