@@ -13,15 +13,22 @@ struct PhotosListView: View {
     @State private var selectedPhoto: MarsPhoto?
     
     var body: some View {
-        LazyVStack(spacing: 20) {
-            ForEach(photos) { photo in
-                PhotoRowView(photo: photo)
-                    .onTapGesture {
-                        selectedPhoto = photo
-                    }
+        let columns = [
+            GridItem(.adaptive(minimum: 300), spacing: 20)
+        ]
+        
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 20) {
+                ForEach(photos) { photo in
+                    PhotoRowView(photo: photo)
+                        .onTapGesture {
+                            selectedPhoto = photo
+                        }
+                }
             }
+            .padding(.horizontal, 10)
+            .padding(.vertical)
         }
-        .padding(.horizontal, 10)
         .sheet(item: $selectedPhoto, content: { photo in
             PhotoDetailView(photo: photo)
                 .presentationBackground(.thinMaterial)

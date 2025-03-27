@@ -9,13 +9,40 @@ import SwiftUI
 
 struct PhotosByDateView: View {
     @Environment(\.client) var client: MarsClient
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     @State private var state: FetchState = .preFetch
     @State private var date = Date()
     @State private var photos: [MarsPhoto] = []
+    
+    private var isCompact: Bool {
+        horizontalSizeClass == .compact
+    }
 
     var body: some View {
-        VStack(spacing: 20) {
+        ScrollView {
+            switch state {
+            case .preFetch:
+                Text("Select a date and click search")
+                    .foregroundColor(.gray)
+                    .padding()
+            case .loading:
+                ProgressView()
+                    .padding()
+            case .error(let error):
+                Text("Error: \(error)")
+                    .foregroundColor(.red)
+                    .padding()
+            case .empty:
+                Text("No photos found for this date.")
+                    .foregroundColor(.gray)
+                    .padding()
+            case .data:
+                PhotosListView(photos: photos)
+                    .padding(.top, 6)
+            }
+        }
+        .safeAreaInset(edge: isCompact ? .top : .bottom) {
             HStack {
                 DatePicker(
                     "Search by Date",
@@ -34,34 +61,21 @@ struct PhotosByDateView: View {
                 .buttonStyle(.borderedProminent)
                 .frame(width: 100)
             }
-            .padding([.leading, .trailing])
-            
-            ScrollView {
-                switch state {
-                case .preFetch:
-                    Text("Select a date and click search")
-                        .foregroundColor(.gray)
-                        .padding()
-                case .loading:
-                    ProgressView()
-                        .padding()
-                case .error(let error):
-                    Text("Error: \(error)")
-                        .foregroundColor(.red)
-                        .padding()
-                case .empty:
-                    Text("No photos found for this date.")
-                        .foregroundColor(.gray)
-                        .padding()
-                case .data:
-                    PhotosListView(photos: photos)
-                        .padding(.top, 10)
-                }
+            .padding()
+            .background {
+                RoundedRectangle(cornerRadius: 12)
+                    .foregroundStyle(.thickMaterial)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.gray.opacity(0.2), lineWidth: 0.75)
+                    )
             }
+            .padding(.horizontal, 6)
+            .padding(.vertical, isCompact ? 2 : 16)
         }
-        .padding(.top, 8)
         .navigationTitle("Search by Date")
         .navigationBarTitleDisplayMode(.inline)
+        .ignoresSafeArea(edges: isCompact ? [] : .bottom)
     }
     
     func fetchPhotos() async {
