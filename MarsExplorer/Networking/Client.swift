@@ -11,7 +11,7 @@ import SwiftUI
 @Observable
 class MarsClient {
     // https://api.nasa.gov/index.html#signUp
-    let apiKey = ""
+    let apiKey = Bundle.main.object(forInfoDictionaryKey: "APIKey") as? String
         
     @MainActor
     func fetchLatestMarsPhotos() async throws -> [MarsPhoto] {
@@ -20,7 +20,6 @@ class MarsClient {
         let response: MarsLatestPhotosResponse = try await URLSession.shared.get(path: path, queryItems: queryItems)
         return response.latestPhotos
     }
-    
     
     @MainActor
     func fetchPhotosByDate(date: Date) async throws -> [MarsPhoto] {
